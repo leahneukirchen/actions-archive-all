@@ -36,11 +36,4 @@ jobs:
           tag: ${{ matrix.repo }}-${{ matrix.ref }}
           body: |
             ${{ steps.archive_all.outputs.sha256 }}
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.archive_all.outputs.archive }}
-          asset_name: ${{ steps.archive_all.outputs.archive }}
-          asset_content_type: application/gzip
+          artifacts: ${{ steps.archive_all.outputs.archive }}
