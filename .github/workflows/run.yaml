@@ -25,7 +25,8 @@ jobs:
         id: archive_all
         with:
           dir: repo
-          name: ${{ matrix.repo }}-${{ matrix.ref }}
+          name: ${{ matrix.repo }}
+          version: ${{ matrix.ref }}
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1
