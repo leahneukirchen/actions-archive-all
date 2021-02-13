@@ -12,18 +12,19 @@ jobs:
           ref: 'v0.7.0'
           path: repo
           submodules: true
-      - uses: leahneukirchen/archive-all@v0
+      - uses: leahneukirchen/actions-archive-all@v0
         id: archive_all
         with:
           dir: repo
           name: lurch-v0.7.0
+      - run: echo ${{ join(steps.archive_all.outputs.*, ':') }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.archive_all.inputs.name }}
+          tag_name: lurch-v0.7.0
           body: |
             ${{ steps.archive_all.outputs.sha256 }}
       - uses: actions/upload-release-asset@v1
@@ -34,4 +35,3 @@ jobs:
           asset_path: ./${{ steps.archive_all.outputs.archive }}
           asset_name: ${{ steps.archive_all.outputs.archive }}
           asset_content_type: application/gzip
-
