@@ -1,0 +1,37 @@
+name: x
+
+on: push
+
+jobs:
+  lurch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: gkdr/lurch
+          ref: 'v0.7.0'
+          path: repo
+          submodules: true
+      - uses: actions/checkout@v2
+        with:
+          repository: fabacab/git-archive-all.sh
+          path: git-archive-all
+      - run: cd repo && ../git-archive-all/git-archive-all.sh --prefix lurch-0.7.0/ ../lurch-0.7.0.tar.gz
+      - run: tar tf lurch-0.7.0.tar.gz
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: lurch-0.7.0
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./lurch-0.7.0.tar.gz
+          asset_name: lurch-0.7.0.tar.gz
+          asset_content_type: application/gzip
+
