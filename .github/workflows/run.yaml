@@ -30,11 +30,10 @@ jobs:
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
-          tag_name: ${{ matrix.repo }}-${{ matrix.ref }}
+          tag: ${{ matrix.repo }}-${{ matrix.ref }}
           body: |
             ${{ steps.archive_all.outputs.sha256 }}
       - uses: actions/upload-release-asset@v1
