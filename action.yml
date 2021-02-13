@@ -19,6 +19,7 @@ runs:
   steps:
     - run: dir=${{ inputs.name }} && dir=${dir/-v/-} && echo "::set-output name=prefix::${dir}" && echo "::set-output name=archive::${dir}.tar.gz"
       id: archive
+      shell: bash
     - run: cd ${{ inputs.dir }} && ${{ github.action_path }}/git-archive-all.sh --prefix "${{ steps.archive.outputs.prefix }}"/ $GITHUB_WORKSPACE/"${{ steps.archive.outputs.archive }}"
       shell: bash
     - run: tar tf $GITHUB_WORKSPACE/${{ steps.archive.outputs.archive }}
