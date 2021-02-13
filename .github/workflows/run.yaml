@@ -21,12 +21,11 @@ jobs:
           ref: ${{ matrix.ref }}
           path: repo
           submodules: true
-      - uses: leahneukirchen/actions-archive-all@v0
+      - uses: leahneukirchen/actions-archive-all
         id: archive_all
         with:
           dir: repo
           name: ${{ matrix.repo }}-${{ matrix.ref }}
-      # - run: echo ${{ join(steps.archive_all.outputs.*, ':') }}
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1
