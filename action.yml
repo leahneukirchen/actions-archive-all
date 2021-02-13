@@ -17,13 +17,12 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: cd ${{ inputs.dir }} && dir=${{ inputs.name }} && dir=${dir/-v/-} && ${{ github.action_path }}/git-archive-all.sh --prefix "$dir"/ ../"$dir".tar.gz
+    - run: dir=${{ inputs.name }} && dir=${dir/-v/-} && echo "::set-output name=prefix::${dir}" && echo "::set-output name=archive::${dir}.tar.gz"
+      id: archive
+    - run: cd ${{ inputs.dir }} && ${{ github.action_path }}/git-archive-all.sh --prefix "${{ steps.archive.outputs.prefix }}"/ $GITHUB_WORKSPACE/"${{ steps.archive.outputs.archive }}"
       shell: bash
-    - run: tar tf $GITHUB_WORKSPACE/${{ inputs.name }}.tar.gz
+    - run: tar tf $GITHUB_WORKSPACE/${{ steps.archive.outputs.archive }}
       shell: bash
-    - run: echo "::set-output name=sha256::$(sha256sum $GITHUB_WORKSPACE/${{ inputs.name }}.tar.gz)"
+    - run: echo "::set-output name=sha256::$(sha256sum $GITHUB_WORKSPACE/${{ steps.archive.outputs.archive }})"
       id: sha256
       shell: bash
-    - run: echo "::set-output name=archive::${{ inputs.name }}.tar.gz"
-      shell: bash
-      id: archive
