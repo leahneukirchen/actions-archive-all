@@ -21,7 +21,7 @@ jobs:
           ref: ${{ matrix.ref }}
           path: repo
           submodules: true
-      - uses: leahneukirchen/actions-archive-all
+      - uses: leahneukirchen/actions-archive-all@master
         id: archive_all
         with:
           dir: repo
