@@ -17,7 +17,11 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: cd ${{ inputs.dir }} && ${{ github.action_path }}/git-archive-all.sh --prefix ${{ inputs.name }}/ ../${{ inputs.name }}.tar.gz
+    - run: |
+      cd ${{ inputs.dir }} &&
+      dir="${{ inputs.name }}" &&
+      dir=${dir/-v/-} &&
+      ${{ github.action_path }}/git-archive-all.sh --prefix "$dir"/ ../"$dir".tar.gz
       shell: bash
     - run: tar tf $GITHUB_WORKSPACE/${{ inputs.name }}.tar.gz
       shell: bash
