@@ -3,28 +3,37 @@ name: x
 on: push
 
 jobs:
-  lurch:
+  archive:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+       include:
+         - user: gkdr
+           repo: lurch
+           ref: 'v0.7.0'
+         - user: cisco
+           repo: ChezScheme
+           ref: 'v9.5.4'
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: gkdr/lurch
-          ref: 'v0.7.0'
+          repository: ${{ matrix.user }}/${{ matrix.repo }}
+          ref: ${{ matrix.ref }}
           path: repo
           submodules: true
       - uses: leahneukirchen/actions-archive-all@v0
         id: archive_all
         with:
           dir: repo
-          name: lurch-v0.7.0
-      - run: echo ${{ join(steps.archive_all.outputs.*, ':') }}
+          name: ${{ matrix.repo }}-${{ matrix.ref }}
+      # - run: echo ${{ join(steps.archive_all.outputs.*, ':') }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: lurch-v0.7.0
+          tag_name: ${{ matrix.repo }}-${{ matrix.ref }}
           body: |
             ${{ steps.archive_all.outputs.sha256 }}
       - uses: actions/upload-release-asset@v1
