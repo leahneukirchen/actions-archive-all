@@ -8,6 +8,10 @@ inputs:
     description: Name of the release
     required: true
 outputs:
+  archive:
+    description: name of archive generated
+  sha256:
+    description: checksum of archive generated
 runs:
   using: "composite"
   steps:
@@ -16,4 +20,6 @@ runs:
     - run: tar tf $GITHUB_WORKSPACE/${{ inputs.name }}.tar.gz
       shell: bash
     - run: echo "::set-output name=sha256::$(sha256sum $GITHUB_WORKSPACE/${{ inputs.name }}.tar.gz)"
+      shell: bash
+    - run: echo "::set-output name=archive::${{ inputs.name }}.tar.gz"
       shell: bash
