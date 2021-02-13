@@ -10,8 +10,10 @@ inputs:
 outputs:
   archive:
     description: name of archive generated
+    value: ${{ steps.archive.outputs.archive }}
   sha256:
     description: checksum of archive generated
+    value: ${{ steps.sha256.outputs.sha256 }}
 runs:
   using: "composite"
   steps:
@@ -20,6 +22,8 @@ runs:
     - run: tar tf $GITHUB_WORKSPACE/${{ inputs.name }}.tar.gz
       shell: bash
     - run: echo "::set-output name=sha256::$(sha256sum $GITHUB_WORKSPACE/${{ inputs.name }}.tar.gz)"
+      id: sha256
       shell: bash
     - run: echo "::set-output name=archive::${{ inputs.name }}.tar.gz"
       shell: bash
+      id: archive
